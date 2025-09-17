@@ -1,4 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;               // Console
+using System.Net.Http;       // HttpClient
+using System.Threading;      // Thread
+using System.Threading.Tasks; // Task / async support
+using System.Runtime.CompilerServices; // UnsafeAccessor
 
 public static class WasiMainWrapper
 {
@@ -11,7 +15,7 @@ public static class WasiMainWrapper
         var json = await client.GetStringAsync(query);
         Console.WriteLine(json);
 
-        ExampleWorld.exports.ExampleWorld.Add(2, int.Parse(json));
+        // ExampleWorld.exports.ExampleWorld.Add(2, int.Parse(json));
         return 0;
     }
 
