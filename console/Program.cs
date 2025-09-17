@@ -1,4 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;               // Console
+using System.Net.Http;       // HttpClient
+using System.Threading;      // Thread
+using System.Threading.Tasks; // Task / async support
+using System.Runtime.CompilerServices; // UnsafeAccessor
 
 public static class WasiMainWrapper
 {
