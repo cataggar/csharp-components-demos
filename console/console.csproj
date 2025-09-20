@@ -24,6 +24,12 @@
     <PackageReference Include="runtime.win-x64.microsoft.dotnet.ilcompiler.llvm" Version="10.0.0-preview.2.25455.1" />
   </ItemGroup>
 
+  <!-- Use local Azure.Core project (source) instead of the packaged binary. Relative path assumes sibling repos under ms directory. -->
+  <ItemGroup>
+    <!-- Adjusted relative path: console -> (..) csharp-components-demos -> (..) ms directory where azure-sdk-for-net resides -->
+    <ProjectReference Include="..\..\azure-sdk-for-net\sdk\core\Azure.Core\src\Azure.Core.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Wit Include="adder.wit" />
   </ItemGroup>

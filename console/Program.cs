@@ -31,7 +31,7 @@ public static class WasiMainWrapper
             Console.WriteLine("Running in non-WASI environment (architecture check)");
         }
 
-        if (OSPlatform.IsWasi())
+        if (OperatingSystem.IsWasi())
         {
             Console.WriteLine("Running in WASI environment (OSPlatform.IsWasi check)");
         }
