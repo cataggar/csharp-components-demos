@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Core;
+using System.Linq;
 
 /// <summary>
 /// A minimal TokenCredential that reads a raw bearer token from the AZURE_TOKEN environment variable.
@@ -20,6 +21,18 @@ public sealed class AzureTokenCredential : TokenCredential
         if (string.IsNullOrWhiteSpace(token))
         {
             throw new InvalidOperationException($"Environment variable '{EnvVarName}' is not set or empty. Provide a valid bearer token.");
+        }
+        token = token.Trim();
+        if (token.IndexOf('\r') >= 0 || token.IndexOf('\n') >= 0)
+        {
+            throw new InvalidOperationException("AZURE_TOKEN contains newline characters which would corrupt the Authorization header.");
+        }
+        // Warn (but do not fail) if token does not look like a JWT (three segments)
+        int dotCount = token.Count(c => c == '.');
+        if (dotCount != 2)
+        {
+            // This could still be a valid opaque token; just emit a diagnostic to stderr
+            Console.Error.WriteLine("[AzureTokenCredential] Warning: AZURE_TOKEN does not appear to be a standard JWT (expected 2 dots). Ensure it is a valid ARM access token.");
         }
         _token = token;
         _expiresOn = DateTimeOffset.UtcNow.AddHours(24);
