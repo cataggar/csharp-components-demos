@@ -4,18 +4,29 @@
     <TargetFramework>net10.0</TargetFramework>
     <RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>
     <UseAppHost>false</UseAppHost>
-    <PublishTrimmed>true</PublishTrimmed>
+  <!-- Remove explicit PublishTrimmed; native toolchain will imply trimming -->
     <SelfContained>true</SelfContained>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
+    <!-- Removed ILCompiler LLVM packages for now; AOT not supported for wasi-wasm in current SDK -->
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageVersion Include="Microsoft.DotNet.ILCompiler.LLVM" Version="10.0.0-preview.2.25455.1" />
     <PackageReference Include="runtime.win-x64.microsoft.dotnet.ilcompiler.llvm" Version="10.0.0-preview.2.25455.1" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BytecodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.7.0-preview00215" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Wit Include="repro.wit" />
+  </ItemGroup>
   <PropertyGroup>
-    <PublishAot>true</PublishAot>
-    <StripSymbols>true</StripSymbols>
+    <!-- AOT disabled: not currently supported for wasi-wasm in this SDK -->
   </PropertyGroup>
 </Project>

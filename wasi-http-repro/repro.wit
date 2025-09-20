@@ -1,0 +1,5 @@
+package repro:test;
+
+world example {
+  // empty world just to enable componentization
+}

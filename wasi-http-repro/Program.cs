@@ -27,7 +27,7 @@ internal class Program
         var overrideUrl = Environment.GetEnvironmentVariable("RAW_URL");
         if (!string.IsNullOrWhiteSpace(overrideUrl)) url = overrideUrl!;
 
-        using var client = new HttpClient();
+    using var client = new WasiHttpClientFix.WasiCompatibleHttpClient();
         var req = new HttpRequestMessage(HttpMethod.Get, url);
         req.Headers.Accept.ParseAdd("application/json");
         Console.WriteLine($"[REPRO] GET {url}");
