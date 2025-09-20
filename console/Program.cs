@@ -7,11 +7,31 @@ using Azure.Identity; // DefaultAzureCredential
 using Azure.ResourceManager; // ArmClient
 using Azure.ResourceManager.Avs; // AVS specific resource types
 // Removed JSON fallback; using only Azure SDK path
+using System.Runtime.InteropServices; // RuntimeInformation, OSPlatform, Architecture
 
 public static class WasiMainWrapper
 {
     public static async Task<int> MainAsync(string[] args)
     {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("WASI")))
+        {
+            Console.WriteLine("Running in WASI environment (OS platform check)");
+        }
+        else
+        {
+            Console.WriteLine("Running in non-WASI environment (OS platform check)");
+        }
+
+        if (RuntimeInformation.ProcessArchitecture == Architecture.Wasm)
+        {
+            Console.WriteLine("Running in WASI environment (architecture check)");
+        }
+        else
+        {
+            Console.WriteLine("Running in non-WASI environment (architecture check)");
+        }
+
+
         // Acquire subscription Id
         string? subscriptionId = args.Length > 0 ? args[0] : Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID");
         if (string.IsNullOrWhiteSpace(subscriptionId))
@@ -39,8 +59,6 @@ public static class WasiMainWrapper
         {
             Console.WriteLine($"- {pc.Data.Name} (Location: {pc.Data.Location}, Sku: {pc.Data.Sku?.Name})");
         }
-        return 0;
-
         return 0;
     }
 
