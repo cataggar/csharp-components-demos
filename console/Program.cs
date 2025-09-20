@@ -3,9 +3,9 @@ using System.Net.Http;       // HttpClient
 using System.Threading;      // Thread
 using System.Threading.Tasks; // Task / async support
 using System.Runtime.CompilerServices; // UnsafeAccessor
-using Azure.Identity; // DefaultAzureCredential
 using Azure.ResourceManager; // ArmClient
 using Azure.ResourceManager.Avs; // AVS specific resource types
+using Azure.Core; // TokenCredential
 // Removed JSON fallback; using only Azure SDK path
 using System.Runtime.InteropServices; // RuntimeInformation, OSPlatform, Architecture
 
@@ -13,33 +13,6 @@ public static class WasiMainWrapper
 {
     public static async Task<int> MainAsync(string[] args)
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("WASI")))
-        {
-            Console.WriteLine("Running in WASI environment (OS platform check)");
-        }
-        else
-        {
-            Console.WriteLine("Running in non-WASI environment (OS platform check)");
-        }
-
-        if (RuntimeInformation.ProcessArchitecture == Architecture.Wasm)
-        {
-            Console.WriteLine("Running in WASI environment (architecture check)");
-        }
-        else
-        {
-            Console.WriteLine("Running in non-WASI environment (architecture check)");
-        }
-
-        if (OperatingSystem.IsWasi())
-        {
-            Console.WriteLine("Running in WASI environment (OSPlatform.IsWasi check)");
-        }
-        else
-        {
-            Console.WriteLine("Running in non-WASI environment (OSPlatform.IsWasi check)");
-        }
-
 
         // Acquire subscription Id
         string? subscriptionId = args.Length > 0 ? args[0] : Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID");
@@ -49,12 +22,17 @@ public static class WasiMainWrapper
             return 1;
         }
 
-        var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions
+        TokenCredential credential;
+        try
         {
-            ExcludeInteractiveBrowserCredential = true,
-            ExcludeAzureCliCredential = false,
-            ExcludeManagedIdentityCredential = false
-        });
+            credential = new AzureTokenCredential();
+            Console.WriteLine("Using AzureTokenCredential (AZURE_TOKEN, 24h expiry)");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Failed to initialize AzureTokenCredential: {ex.Message}");
+            return 1;
+        }
 
         using var httpClient = new HttpClient();
         var armOptions = new ArmClientOptions

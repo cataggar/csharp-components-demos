@@ -16,7 +16,6 @@
   <ItemGroup>
     <!-- <PackageReference Include="BytecodeAlliance.Componentize.DotNet.Wasm.SDK"
       Version="0.4.0-preview00007" /> -->
-    <PackageReference Include="Azure.Identity" Version="1.16.0" />
     <PackageReference Include="Azure.ResourceManager" Version="1.14.0-beta.1" />
     <PackageReference Include="Azure.ResourceManager.Avs" Version="1.5.0" />
     <PackageReference Include="BytecodeAlliance.Componentize.DotNet.Wasm.SDK" Version="0.7.0-preview00215" />
