@@ -31,6 +31,15 @@ public static class WasiMainWrapper
             Console.WriteLine("Running in non-WASI environment (architecture check)");
         }
 
+        if (OSPlatform.IsWasi())
+        {
+            Console.WriteLine("Running in WASI environment (OSPlatform.IsWasi check)");
+        }
+        else
+        {
+            Console.WriteLine("Running in non-WASI environment (OSPlatform.IsWasi check)");
+        }
+
 
         // Acquire subscription Id
         string? subscriptionId = args.Length > 0 ? args[0] : Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID");
